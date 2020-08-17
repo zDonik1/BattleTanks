@@ -30,5 +30,5 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	// Aims at location
-	void AimAt(const FVector& hitLocation);
+	void AimAt(const FVector& hitLocation, float launchSpeed);
 };

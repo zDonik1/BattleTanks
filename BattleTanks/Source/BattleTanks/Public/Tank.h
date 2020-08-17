@@ -11,8 +11,11 @@ class BATTLETANKS_API ATank : public APawn
 {
 	GENERATED_BODY()
 
-protected:
+private:
 	class UTankAimingComponent* tankAimingComponent = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = Firing)
+		float launchSpeed = 100000; // cm/s = 1000 m/s
 
 public:
 	// Sets default values for this pawn's properties
