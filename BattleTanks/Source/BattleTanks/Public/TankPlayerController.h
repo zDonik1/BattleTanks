@@ -13,6 +13,16 @@ UCLASS()
 class BATTLETANKS_API ATankPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+
+private:
+	UPROPERTY(EditAnywhere)
+		float crossHairXLocation = 0.5f;
+
+	UPROPERTY(EditAnywhere)
+		float crossHairYLocation = 0.4f;
+
+	UPROPERTY(EditAnywhere)
+		float lineTraceRange = 1000000; // cm = 10 km
 	
 public:
 	virtual void BeginPlay() override;
@@ -23,6 +33,12 @@ public:
 	// Moving the barrel to aim to crosshair position
 	void AimTowardsCrosshair();
 
-	// Line tracing to hit location
+	// Getting hit location of crosshair
 	bool GetSightRayHitLocation(FVector &o_hitLocation) const;
+
+	// Calculating look direction through crosshair
+	bool GetLookDirection(const FVector2D &screenLocation, FVector &o_lookDirection) const;
+
+	// Calculating hit location by line tracing
+	bool GetLookVectorHitLocation(const FVector &lookDirection, FVector& o_hitLocation) const;
 };
