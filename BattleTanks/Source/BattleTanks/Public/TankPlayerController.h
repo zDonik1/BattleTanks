@@ -24,7 +24,7 @@ private:
 	UPROPERTY(EditAnywhere)
 		float lineTraceRange = 1000000; // cm = 10 km
 	
-public:
+private:
 	virtual void BeginPlay() override;
 	virtual void Tick(float deltaSeconds) override;
 

@@ -11,9 +11,17 @@ class BATTLETANKS_API ATank : public APawn
 {
 	GENERATED_BODY()
 
+protected:
+	class UTankAimingComponent* tankAimingComponent = nullptr;
+
 public:
 	// Sets default values for this pawn's properties
 	ATank();
+
+	void AimAt(const FVector &hitLocation);
+
+	UFUNCTION(BlueprintCallable, Category = Setup)
+		void SetBarrelReference(UStaticMeshComponent* barrel);
 
 protected:
 	// Called when the game starts or when spawned
