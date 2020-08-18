@@ -4,6 +4,7 @@
 #include "TankAimingComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "TankBarrel.h"
+#include "TankTurret.h"
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
@@ -14,6 +15,11 @@ UTankAimingComponent::UTankAimingComponent()
 void UTankAimingComponent::SetBarrelReference(UTankBarrel* l_barrel)
 {
 	barrel = l_barrel;
+}
+
+void UTankAimingComponent::SetTurretReference(UTankTurret* l_turret)
+{
+	turret = l_turret;
 }
 
 void UTankAimingComponent::AimAt(const FVector& hitLocation, float launchSpeed)
@@ -29,7 +35,9 @@ void UTankAimingComponent::AimAt(const FVector& hitLocation, float launchSpeed)
 	if (!success)
 		return;
 	
-	MoveBarrel(launchVelocity.GetSafeNormal());
+	auto normalLaunchVelocity = launchVelocity.GetSafeNormal();
+	MoveBarrel(normalLaunchVelocity);
+	MoveTurret(normalLaunchVelocity);
 }
 
 void UTankAimingComponent::MoveBarrel(const FVector& launchDirection)
@@ -39,3 +47,10 @@ void UTankAimingComponent::MoveBarrel(const FVector& launchDirection)
 	barrel->Elevate(deltaPitch);
 }
 
+void UTankAimingComponent::MoveTurret(const FVector& launchDirection)
+{
+	auto turretYaw = turret->GetForwardVector().Rotation().Yaw;
+	auto deltaYaw = launchDirection.Rotation().Yaw - turretYaw;
+	UE_LOG(LogTemp, Warning, TEXT("%f: deltaYaw: %f"), GetWorld()->GetTimeSeconds(), deltaYaw);
+	turret->Rotate(deltaYaw);
+}
