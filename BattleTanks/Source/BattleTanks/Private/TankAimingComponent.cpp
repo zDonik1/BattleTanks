@@ -34,9 +34,8 @@ void UTankAimingComponent::AimAt(const FVector& hitLocation, float launchSpeed)
 
 void UTankAimingComponent::MoveBarrel(const FVector& launchDirection)
 {
-	auto barrelRotator = barrel->GetForwardVector().Rotation();
-	auto aimAsRotator = launchDirection.Rotation();
-	auto deltaRotator = aimAsRotator - barrelRotator;
-	barrel->Elevate(5.0f);
+	auto barrelPitch = barrel->GetForwardVector().Rotation().Pitch;
+	auto deltaPitch = launchDirection.Rotation().Pitch - barrelPitch;
+	barrel->Elevate(deltaPitch);
 }
 

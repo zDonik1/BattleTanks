@@ -15,7 +15,7 @@ private:
 	class UTankAimingComponent* tankAimingComponent = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = Firing)
-		float launchSpeed = 100000; // cm/s = 1000 m/s
+		float launchSpeed = 10000; // cm/s = 100 m/s
 
 public:
 	// Sets default values for this pawn's properties
@@ -24,7 +24,7 @@ public:
 	void AimAt(const FVector &hitLocation);
 
 	UFUNCTION(BlueprintCallable, Category = Setup)
-		void SetBarrelReference(UTankBarrel* barrel);
+		void SetBarrelReference(class UTankBarrel* barrel);
 
 protected:
 	// Called when the game starts or when spawned
