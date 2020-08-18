@@ -24,7 +24,7 @@ public:
 	void AimAt(const FVector &hitLocation);
 
 	UFUNCTION(BlueprintCallable, Category = Setup)
-		void SetBarrelReference(UStaticMeshComponent* barrel);
+		void SetBarrelReference(UTankBarrel* barrel);
 
 protected:
 	// Called when the game starts or when spawned
