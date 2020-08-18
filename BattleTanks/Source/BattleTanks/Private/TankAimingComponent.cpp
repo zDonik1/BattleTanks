@@ -8,6 +8,7 @@
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
 {
+	PrimaryComponentTick.bCanEverTick = true;
 }
 
 void UTankAimingComponent::SetBarrelReference(UTankBarrel* l_barrel)

@@ -25,5 +25,9 @@ private:
 		float maxElevation = 35.f;
 	
 public:
-	void Elevate(float degreesPerSecond);
+	/** 
+	* @brief Elevates the barrel with some relative speed
+	* @params relativeSpeed: -1.0 is max downward speed, 1.0 is max upward speed
+	*/
+	void Elevate(float relativeSpeed);
 };
