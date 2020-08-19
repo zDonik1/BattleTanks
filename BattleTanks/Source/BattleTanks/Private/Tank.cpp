@@ -13,6 +13,7 @@ ATank::ATank()
 	PrimaryActorTick.bCanEverTick = false;
 
 	tankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("AimingComponent"));
+
 }
 
 void ATank::AimAt(const FVector& hitLocation)
@@ -36,8 +37,13 @@ void ATank::Fire()
 	if (!m_barrel)
 		return;
 
-	FVector socketLocation = m_barrel->GetSocketLocation(FName("ProjectileLaunch"));
-	GetWorld()->SpawnActor(projectile, &socketLocation);
+	auto projectileInstance = GetWorld()->SpawnActor<AProjectile>(
+		projectile,
+		m_barrel->GetSocketLocation(FName("ProjectileLaunch")),
+		m_barrel->GetSocketRotation(FName("ProjectileLaunch"))
+		);
+
+	projectileInstance->Launch(launchSpeed);
 }
 
 // Called when the game starts or when spawned
