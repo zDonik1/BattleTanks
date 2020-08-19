@@ -24,7 +24,7 @@ void UTankAimingComponent::SetTurretReference(UTankTurret* l_turret)
 
 void UTankAimingComponent::AimAt(const FVector& hitLocation, float launchSpeed)
 {
-	if (!barrel)
+	if (!barrel || !turret)
 		return;
 
 	FVector launchVelocity(0.0);
@@ -51,6 +51,5 @@ void UTankAimingComponent::MoveTurret(const FVector& launchDirection)
 {
 	auto turretYaw = turret->GetForwardVector().Rotation().Yaw;
 	auto deltaYaw = launchDirection.Rotation().Yaw - turretYaw;
-	UE_LOG(LogTemp, Warning, TEXT("%f: deltaYaw: %f"), GetWorld()->GetTimeSeconds(), deltaYaw);
 	turret->Rotate(deltaYaw);
 }
