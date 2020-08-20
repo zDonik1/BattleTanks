@@ -17,6 +17,9 @@ private:
 	class UTankAimingComponent* tankAimingComponent = nullptr;
 	UTankBarrel* m_barrel = nullptr;
 
+	float reloadTimeInSeconds = 3.f;
+	double lastFireTime = 0.0;
+
 	UPROPERTY(EditAnywhere, Category = Setup)
 		TSubclassOf<class AProjectile> projectile;
 

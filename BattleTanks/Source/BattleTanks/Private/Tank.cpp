@@ -37,6 +37,10 @@ void ATank::Fire()
 	if (!m_barrel)
 		return;
 
+	bool isReloaded = (FPlatformTime::Seconds() - lastFireTime) > reloadTimeInSeconds;
+	if (!isReloaded)
+		return;
+
 	auto projectileInstance = GetWorld()->SpawnActor<AProjectile>(
 		projectile,
 		m_barrel->GetSocketLocation(FName("ProjectileLaunch")),
@@ -44,6 +48,7 @@ void ATank::Fire()
 		);
 
 	projectileInstance->Launch(launchSpeed);
+	lastFireTime = FPlatformTime::Seconds();
 }
 
 // Called when the game starts or when spawned
