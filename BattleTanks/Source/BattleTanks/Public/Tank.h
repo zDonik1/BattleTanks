@@ -17,14 +17,16 @@ private:
 	class UTankAimingComponent* tankAimingComponent = nullptr;
 	UTankBarrel* m_barrel = nullptr;
 
-	float reloadTimeInSeconds = 3.f;
 	double lastFireTime = 0.0;
 
-	UPROPERTY(EditAnywhere, Category = Setup)
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
 		TSubclassOf<class AProjectile> projectile;
 
-	UPROPERTY(EditAnywhere, Category = Firing)
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
 		float launchSpeed = 10000; // cm/s = 100 m/s
+
+	UPROPERTY(EditDefaultsOnly, Category = Firing);
+	float reloadTimeInSeconds = 3.f;
 
 public:
 	// Sets default values for this pawn's properties
