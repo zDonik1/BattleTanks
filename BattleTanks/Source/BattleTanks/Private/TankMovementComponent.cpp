@@ -27,3 +27,8 @@ void UTankMovementComponent::IntendMoveRight(float axis)
 	m_leftTrack->SetThrottle(axis);
 	m_rightTrack->SetThrottle(-axis);
 }
+
+void UTankMovementComponent::RequestDirectMove(const FVector& moveVelocity, bool bForceMaxSpeed)
+{
+	UE_LOG(LogTemp, Warning, TEXT("MoveVelocity: %s"), *moveVelocity.ToString());
+}

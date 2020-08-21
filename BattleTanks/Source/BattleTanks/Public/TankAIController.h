@@ -15,6 +15,11 @@ UCLASS()
 class BATTLETANKS_API ATankAIController : public AAIController
 {
 	GENERATED_BODY()
+
+private:
+	// How close AI tank should be to player before stopping in cm
+	UPROPERTY(EditDefaultsOnly)
+		float acceptanceRadius = 3000.f;
 	
 private:
 	virtual void BeginPlay() override;

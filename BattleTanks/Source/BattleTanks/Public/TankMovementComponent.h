@@ -29,4 +29,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Movement)
 		void IntendMoveRight(float axis);
+
+	void RequestDirectMove(const FVector& moveVelocity, bool bForceMaxSpeed) override;
 };
