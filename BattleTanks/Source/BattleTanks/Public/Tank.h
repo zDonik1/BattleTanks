@@ -28,11 +28,15 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = Firing);
 	float reloadTimeInSeconds = 3.f;
 
+protected:
+	UPROPERTY(BlueprintReadOnly)
+		class UTankMovementComponent* tankMovementComponent = nullptr;
+
 public:
 	// Sets default values for this pawn's properties
 	ATank();
 
-	void AimAt(const FVector &hitLocation);
+	void AimAt(const FVector& hitLocation);
 
 	UFUNCTION(BlueprintCallable, Category = Setup)
 		void SetBarrelReference(UTankBarrel* barrel);
@@ -47,7 +51,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
