@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright EmbraceIT Ltd.
 
 #pragma once
 
@@ -21,14 +21,16 @@ private:
 	UTankTrack* m_rightTrack = nullptr;
 	
 public:
-	UFUNCTION(BlueprintCallable, Category = Setup)
+	UFUNCTION(BlueprintCallable, Category = "Setup")
 		void Initialize(UTankTrack* leftTrack, UTankTrack* rightTrack);
 
-	UFUNCTION(BlueprintCallable, Category = Movement)
+	UFUNCTION(BlueprintCallable, Category = "Movement")
 		void IntendMoveForward(float axis);
 
-	UFUNCTION(BlueprintCallable, Category = Movement)
+	UFUNCTION(BlueprintCallable, Category = "Movement")
 		void IntendMoveRight(float axis);
 
+private:
+	// Called from pathfinding logic by AI Controller
 	void RequestDirectMove(const FVector& moveVelocity, bool bForceMaxSpeed) override;
 };

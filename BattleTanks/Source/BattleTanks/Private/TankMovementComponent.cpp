@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright EmbraceIT Ltd.
 
 
 #include "TankMovementComponent.h"
@@ -12,6 +12,7 @@ void UTankMovementComponent::Initialize(UTankTrack* leftTrack, UTankTrack* right
 
 void UTankMovementComponent::IntendMoveForward(float axis)
 {
+	// TODO: some day, fix the issue with double speed when fly-by-wire and manual contorls are used together
 	if (!m_leftTrack || !m_rightTrack)
 		return;
 
@@ -21,6 +22,7 @@ void UTankMovementComponent::IntendMoveForward(float axis)
 
 void UTankMovementComponent::IntendMoveRight(float axis)
 {
+	// TODO: some day, fix the issue with double speed when fly-by-wire and manual contorls are used together
 	if (!m_leftTrack || !m_rightTrack)
 		return;
 
@@ -30,5 +32,8 @@ void UTankMovementComponent::IntendMoveRight(float axis)
 
 void UTankMovementComponent::RequestDirectMove(const FVector& moveVelocity, bool bForceMaxSpeed)
 {
-	UE_LOG(LogTemp, Warning, TEXT("MoveVelocity: %s"), *moveVelocity.ToString());
+	auto tankForwardVector = GetOwner()->GetActorForwardVector().GetSafeNormal();
+	auto forwardMoveIntention = moveVelocity.GetSafeNormal(); // vector where the tank should move to
+	IntendMoveForward(FVector::DotProduct(tankForwardVector, forwardMoveIntention));
+	IntendMoveRight(FVector::CrossProduct(tankForwardVector, forwardMoveIntention).Z);
 }
