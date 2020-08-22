@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "TankBarrel.h"
 #include "TankTurret.h"
+#include "Tank.h"
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
@@ -12,23 +13,20 @@ UTankAimingComponent::UTankAimingComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-void UTankAimingComponent::SetBarrelReference(UTankBarrel* l_barrel)
+void UTankAimingComponent::Initialize(UTankBarrel* barrel, UTankTurret* turret)
 {
-	barrel = l_barrel;
-}
-
-void UTankAimingComponent::SetTurretReference(UTankTurret* l_turret)
-{
-	turret = l_turret;
+	m_barrel = barrel;
+	m_turret = turret;
+	Cast<ATank>(GetOwner())->SetBarrelRef(m_barrel);
 }
 
 void UTankAimingComponent::AimAt(const FVector& hitLocation, float launchSpeed)
 {
-	if (!barrel || !turret)
+	if (!m_barrel || !m_turret)
 		return;
 
 	FVector launchVelocity(0.0);
-	FVector startLocation = barrel->GetSocketLocation(FName("ProjectileLaunch"));
+	FVector startLocation = m_barrel->GetSocketLocation(FName("ProjectileLaunch"));
 	auto success = UGameplayStatics::SuggestProjectileVelocity(
 		this, launchVelocity, startLocation, hitLocation, launchSpeed, 
 		false, 0.f, 0.f, ESuggestProjVelocityTraceOption::DoNotTrace);
@@ -42,14 +40,20 @@ void UTankAimingComponent::AimAt(const FVector& hitLocation, float launchSpeed)
 
 void UTankAimingComponent::MoveBarrel(const FVector& launchDirection)
 {
-	auto barrelPitch = barrel->GetForwardVector().Rotation().Pitch;
+	if (!m_barrel || !m_turret)
+		return; 
+
+	auto barrelPitch = m_barrel->GetForwardVector().Rotation().Pitch;
 	auto deltaPitch = launchDirection.Rotation().Pitch - barrelPitch;
-	barrel->Elevate(deltaPitch);
+	m_barrel->Elevate(deltaPitch);
 }
 
 void UTankAimingComponent::MoveTurret(const FVector& launchDirection)
 {
-	auto turretYaw = turret->GetForwardVector().Rotation().Yaw;
+	if (!m_barrel || !m_turret)
+		return;
+
+	auto turretYaw = m_turret->GetForwardVector().Rotation().Yaw;
 	auto deltaYaw = launchDirection.Rotation().Yaw - turretYaw;
-	turret->Rotate(deltaYaw);
+	m_turret->Rotate(deltaYaw);
 }

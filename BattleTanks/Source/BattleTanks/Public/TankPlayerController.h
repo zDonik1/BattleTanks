@@ -23,12 +23,14 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 		float lineTraceRange = 1000000; // cm = 10 km
+
+protected:
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+		class ATank* GetControlledTank() const;
 	
 private:
 	virtual void BeginPlay() override;
 	virtual void Tick(float deltaSeconds) override;
-
-	class ATank* GetControlledTank() const;
 	
 	// Moving the barrel to aim to crosshair position
 	void AimTowardsCrosshair();

@@ -14,7 +14,6 @@ class BATTLETANKS_API ATank : public APawn
 	GENERATED_BODY()
 
 private:
-	class UTankAimingComponent* tankAimingComponent = nullptr;
 	UTankBarrel* m_barrel = nullptr;
 
 	double lastFireTime = 0.0;
@@ -30,19 +29,16 @@ private:
 
 protected:
 	UPROPERTY(BlueprintReadOnly)
+		class UTankAimingComponent* tankAimingComponent = nullptr;
+	UPROPERTY(BlueprintReadOnly)
 		class UTankMovementComponent* tankMovementComponent = nullptr;
 
 public:
 	// Sets default values for this pawn's properties
 	ATank();
 
+	void SetBarrelRef(UTankBarrel* barrel);
 	void AimAt(const FVector& hitLocation);
-
-	UFUNCTION(BlueprintCallable, Category = Setup)
-		void SetBarrelReference(UTankBarrel* barrel);
-
-	UFUNCTION(BlueprintCallable, Category = Setup)
-		void SetTurretReference(class UTankTurret* turret);
 
 	UFUNCTION(BlueprintCallable, Category = Action)
 		void Fire();
