@@ -3,7 +3,6 @@
 
 #include "Tank.h"
 #include "TankAimingComponent.h"
-#include "TankMovementComponent.h"
 #include "TankBarrel.h"
 #include "Projectile.h"
 
@@ -14,17 +13,14 @@ ATank::ATank()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
+UTankAimingComponent* ATank::GetAimComponent()
+{
+	return tankAimingComponent;
+}
+
 void ATank::SetBarrelRef(UTankBarrel* barrel)
 {
 	m_barrel = barrel;
-}
-
-void ATank::AimAt(const FVector& hitLocation)
-{
-	if (!ensure(tankAimingComponent))
-		return;
-
-	tankAimingComponent->AimAt(hitLocation, launchSpeed);
 }
 
 void ATank::Fire()

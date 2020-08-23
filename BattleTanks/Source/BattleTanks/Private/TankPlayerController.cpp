@@ -9,11 +9,14 @@ void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	auto aimingComponent = GetControlledTank()->FindComponentByClass<UTankAimingComponent>();
-	if (aimingComponent)
-		FoundAimingComponent(aimingComponent);
-	else
-		UE_LOG(LogTemp, Error, TEXT("UTankPlayerController::BeginPlay: Can't find aiming component"));
+	controlledTank = Cast<ATank>(GetPawn());
+	// finding component instead of getting from tank, since there is a race condition
+	// ... between when BeginPlay is called on PlayerController and Tank
+	auto aimingComponent = controlledTank->FindComponentByClass<UTankAimingComponent>();
+	if (!ensure(aimingComponent))
+		return;
+	
+	FoundAimingComponent(aimingComponent);
 }
 
 void ATankPlayerController::Tick(float deltaSeconds)
@@ -23,19 +26,14 @@ void ATankPlayerController::Tick(float deltaSeconds)
 	AimTowardsCrosshair();
 }
 
-ATank* ATankPlayerController::GetControlledTank() const
-{
-	return Cast<ATank>(GetPawn());
-}
-
 void ATankPlayerController::AimTowardsCrosshair()
 {
-	if (!ensure(GetControlledTank()))
+	if (!ensure(controlledTank))
 		return;
 
 	FVector hitLocation;
 	if (GetSightRayHitLocation(hitLocation))
-		GetControlledTank()->AimAt(hitLocation);
+		controlledTank->GetAimComponent()->AimAt(hitLocation);
 }
 
 bool ATankPlayerController::GetSightRayHitLocation(FVector& o_hitLocation) const

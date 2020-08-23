@@ -27,6 +27,9 @@ private:
 	UTankBarrel* m_barrel = nullptr;
 	UTankTurret* m_turret = nullptr;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+		float launchSpeed = 10000; // cm/s = 100 m/s
+
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
 		EFireState fireState = EFireState::Aiming;
@@ -40,7 +43,7 @@ public:
 
 public:
 	// Aims at location
-	void AimAt(const FVector& hitLocation, float launchSpeed);
+	void AimAt(const FVector& hitLocation);
 
 private:
 	// Moves barrel towards launch direction

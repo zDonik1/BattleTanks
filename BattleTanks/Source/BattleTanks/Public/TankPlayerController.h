@@ -15,6 +15,8 @@ class BATTLETANKS_API ATankPlayerController : public APlayerController
 	GENERATED_BODY()
 
 private:
+	class ATank* controlledTank = nullptr;
+
 	UPROPERTY(EditDefaultsOnly)
 		float crossHairXLocation = 0.5f;
 
@@ -25,9 +27,6 @@ private:
 		float lineTraceRange = 1000000; // cm = 10 km
 
 protected:
-	UFUNCTION(BlueprintCallable, Category = "Setup")
-		class ATank* GetControlledTank() const;
-
 	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
 		void FoundAimingComponent(class UTankAimingComponent* aimComponentRef);
 	

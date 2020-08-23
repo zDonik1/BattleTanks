@@ -20,7 +20,7 @@ void UTankAimingComponent::Initialize(UTankBarrel* barrel, UTankTurret* turret)
 	Cast<ATank>(GetOwner())->SetBarrelRef(m_barrel);
 }
 
-void UTankAimingComponent::AimAt(const FVector& hitLocation, float launchSpeed)
+void UTankAimingComponent::AimAt(const FVector& hitLocation)
 {
 	if (!ensure(m_barrel && m_turret))
 		return;

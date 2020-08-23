@@ -3,6 +3,7 @@
 
 #include "TankAIController.h"
 #include "Tank.h"
+#include "TankAimingComponent.h"
 
 void ATankAIController::BeginPlay()
 {
@@ -18,7 +19,11 @@ void ATankAIController::Tick(float deltaTime)
 		MoveToActor(playerTank, acceptanceRadius);
 
 		auto controlledTank = Cast<ATank>(GetPawn());
-		controlledTank->AimAt(playerTank->GetActorLocation());
+		auto aimComponent = controlledTank->GetAimComponent();
+		if (!ensure(aimComponent))
+			return;
+
+		aimComponent->AimAt(playerTank->GetActorLocation());
 		controlledTank->Fire();
 	}
 }
