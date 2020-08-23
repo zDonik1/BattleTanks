@@ -27,6 +27,14 @@ private:
 	UTankBarrel* m_barrel = nullptr;
 	UTankTurret* m_turret = nullptr;
 
+	double lastFireTime = 0.0;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+		TSubclassOf<class AProjectile> projectile;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+		float reloadTimeInSeconds = 3.f;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 		float launchSpeed = 10000; // cm/s = 100 m/s
 
@@ -44,6 +52,9 @@ public:
 public:
 	// Aims at location
 	void AimAt(const FVector& hitLocation);
+
+	UFUNCTION(BlueprintCallable, Category = "Fire")
+		void Fire();
 
 private:
 	// Moves barrel towards launch direction

@@ -8,22 +8,25 @@
 void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();
+
+	playerTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	// finding component instead of getting from tank, since there is a race condition
+	// ... between when BeginPlay is called on PlayerController and Tank
+	aimComponent = Cast<ATank>(GetPawn())->FindComponentByClass<UTankAimingComponent>();
 }
 
 void ATankAIController::Tick(float deltaTime)
 {
 	Super::Tick(deltaTime);
 
-	auto playerTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	if (playerTank) {
-		MoveToActor(playerTank, acceptanceRadius);
+	if (!ensure(playerTank))
+		return;
 
-		auto controlledTank = Cast<ATank>(GetPawn());
-		auto aimComponent = controlledTank->GetAimComponent();
-		if (!ensure(aimComponent))
-			return;
+	MoveToActor(playerTank, acceptanceRadius);
 
-		aimComponent->AimAt(playerTank->GetActorLocation());
-		controlledTank->Fire();
-	}
+	if (!ensure(aimComponent))
+		return;
+
+	aimComponent->AimAt(playerTank->GetActorLocation());
+	aimComponent->Fire();
 }
