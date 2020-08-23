@@ -29,7 +29,7 @@ private:
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
-		EFireState fireState = EFireState::Reloading;
+		EFireState fireState = EFireState::Aiming;
 
 public:
 	// Sets default values for this component's properties

@@ -13,7 +13,7 @@ void UTankMovementComponent::Initialize(UTankTrack* leftTrack, UTankTrack* right
 void UTankMovementComponent::IntendMoveForward(float axis)
 {
 	// TODO: some day, fix the issue with double speed when fly-by-wire and manual contorls are used together
-	if (!m_leftTrack || !m_rightTrack)
+	if (!ensure(m_leftTrack && m_rightTrack))
 		return;
 
 	m_leftTrack->SetThrottle(axis);
@@ -23,7 +23,7 @@ void UTankMovementComponent::IntendMoveForward(float axis)
 void UTankMovementComponent::IntendMoveRight(float axis)
 {
 	// TODO: some day, fix the issue with double speed when fly-by-wire and manual contorls are used together
-	if (!m_leftTrack || !m_rightTrack)
+	if (!ensure(m_leftTrack && m_rightTrack))
 		return;
 
 	m_leftTrack->SetThrottle(axis);

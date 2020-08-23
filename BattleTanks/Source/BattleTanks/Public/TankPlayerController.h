@@ -7,7 +7,7 @@
 #include "TankPlayerController.generated.h"
 
 /**
- * 
+ * Responsible for helping the player aim
  */
 UCLASS()
 class BATTLETANKS_API ATankPlayerController : public APlayerController
@@ -27,6 +27,9 @@ private:
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 		class ATank* GetControlledTank() const;
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
+		void FoundAimingComponent(class UTankAimingComponent* aimComponentRef);
 	
 private:
 	virtual void BeginPlay() override;
