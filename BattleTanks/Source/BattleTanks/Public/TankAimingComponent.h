@@ -18,7 +18,7 @@ enum class EFireState : uint8
 };
 
 // Holds barrel's properties and Elevate method
-UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+UCLASS(Blueprintable, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class BATTLETANKS_API UTankAimingComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -28,6 +28,7 @@ private:
 	UTankTurret* m_turret = nullptr;
 
 	double lastFireTime = 0.0;
+	FVector launchDirection{ 0.f };
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 		TSubclassOf<class AProjectile> projectile;
@@ -40,7 +41,7 @@ private:
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
-		EFireState fireState = EFireState::Aiming;
+		EFireState fireState = EFireState::Reloading;
 
 public:
 	// Sets default values for this component's properties
@@ -49,7 +50,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void Initialize(UTankBarrel *barrel, UTankTurret *turret);
 
-public:
 	// Aims at location
 	void AimAt(const FVector& hitLocation);
 
@@ -57,9 +57,16 @@ public:
 		void Fire();
 
 private:
+	void BeginPlay() override;
+
+	void TickComponent(float deltaTime, ELevelTick tickType, 
+		FActorComponentTickFunction* tickFunction) override;
+
 	// Moves barrel towards launch direction
-	void MoveBarrel(const FVector& launchDirection);
+	void MoveBarrel();
 
 	// Moves turret towards launch direction
-	void MoveTurret(const FVector& launchDirection);
+	void MoveTurret();
+
+	bool IsBarrelMoving();
 };

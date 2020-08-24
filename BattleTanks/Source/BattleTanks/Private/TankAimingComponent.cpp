@@ -25,17 +25,16 @@ void UTankAimingComponent::AimAt(const FVector& hitLocation)
 	if (!ensure(m_barrel && m_turret))
 		return;
 
-	FVector launchVelocity(0.0);
 	FVector startLocation = m_barrel->GetSocketLocation(FName("ProjectileLaunch"));
 	auto success = UGameplayStatics::SuggestProjectileVelocity(
-		this, launchVelocity, startLocation, hitLocation, launchSpeed, 
+		this, launchDirection, startLocation, hitLocation, launchSpeed, 
 		false, 0.f, 0.f, ESuggestProjVelocityTraceOption::DoNotTrace);
 	if (!success)
 		return;
 	
-	auto normalLaunchVelocity = launchVelocity.GetSafeNormal();
-	MoveBarrel(normalLaunchVelocity);
-	MoveTurret(normalLaunchVelocity);
+	launchDirection = launchDirection.GetSafeNormal();
+	MoveBarrel();
+	MoveTurret();
 }
 
 void UTankAimingComponent::Fire()
@@ -43,8 +42,7 @@ void UTankAimingComponent::Fire()
 	if (!ensure(m_barrel && projectile))
 		return;
 
-	bool isReloaded = (FPlatformTime::Seconds() - lastFireTime) > reloadTimeInSeconds;
-	if (!isReloaded)
+	if (fireState == EFireState::Reloading)
 		return;
 
 	auto projectileInstance = GetWorld()->SpawnActor<AProjectile>(
@@ -57,7 +55,25 @@ void UTankAimingComponent::Fire()
 	lastFireTime = FPlatformTime::Seconds();
 }
 
-void UTankAimingComponent::MoveBarrel(const FVector& launchDirection)
+void UTankAimingComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	lastFireTime = FPlatformTime::Seconds();
+}
+
+void UTankAimingComponent::TickComponent(float deltaTime, ELevelTick tickType, 
+	FActorComponentTickFunction* tickFunction)
+{
+	if ((FPlatformTime::Seconds() - lastFireTime) < reloadTimeInSeconds)
+		fireState = EFireState::Reloading;
+	else if (IsBarrelMoving())
+		fireState = EFireState::Aiming;
+	else
+		fireState = EFireState::Locked;
+}
+
+void UTankAimingComponent::MoveBarrel()
 {
 	if (!ensure(m_barrel && m_turret))
 		return; 
@@ -67,7 +83,7 @@ void UTankAimingComponent::MoveBarrel(const FVector& launchDirection)
 	m_barrel->Elevate(deltaPitch);
 }
 
-void UTankAimingComponent::MoveTurret(const FVector& launchDirection)
+void UTankAimingComponent::MoveTurret()
 {
 	if (!ensure(m_barrel && m_turret))
 		return;
@@ -75,4 +91,12 @@ void UTankAimingComponent::MoveTurret(const FVector& launchDirection)
 	auto turretYaw = m_turret->GetForwardVector().Rotation().Yaw;
 	auto deltaYaw = launchDirection.Rotation().Yaw - turretYaw;
 	m_turret->Rotate(deltaYaw);
+}
+
+bool UTankAimingComponent::IsBarrelMoving()
+{
+	if (!ensure(m_barrel))
+		return false;
+
+	return !launchDirection.Equals(m_barrel->GetForwardVector(), 0.01f);
 }
