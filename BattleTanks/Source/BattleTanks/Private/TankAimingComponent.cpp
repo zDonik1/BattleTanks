@@ -65,6 +65,8 @@ void UTankAimingComponent::BeginPlay()
 void UTankAimingComponent::TickComponent(float deltaTime, ELevelTick tickType, 
 	FActorComponentTickFunction* tickFunction)
 {
+	Super::TickComponent(deltaTime, tickType, tickFunction);
+
 	if ((FPlatformTime::Seconds() - lastFireTime) < reloadTimeInSeconds)
 		fireState = EFireState::Reloading;
 	else if (IsBarrelMoving())
