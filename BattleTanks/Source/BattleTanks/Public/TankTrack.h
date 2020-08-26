@@ -16,6 +16,8 @@ class BATTLETANKS_API UTankTrack : public UStaticMeshComponent
 
 private:
 	UStaticMeshComponent* tankRootMesh = nullptr;
+	float currentThrottle = 0.f;
+
 	// Max driving force in kg*cm*s^-2
 	UPROPERTY(EditDefaultsOnly)
 		float maxDrivingForce = 40000000.f;
@@ -27,9 +29,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Input")
 		void SetThrottle(float throttle);
 
+
 private:
 	void BeginPlay() override;
 	
+	void DriveTrack();
 	void ApplySidewaysForce();
 
 	UFUNCTION()

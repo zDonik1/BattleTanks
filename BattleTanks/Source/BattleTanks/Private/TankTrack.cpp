@@ -11,9 +11,7 @@ UTankTrack::UTankTrack()
 
 void UTankTrack::SetThrottle(float throttle)
 {
-	auto forceApplied = GetForwardVector() * throttle * maxDrivingForce;
-	auto tankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
-	tankRoot->AddForceAtLocation(forceApplied, GetComponentLocation());
+	currentThrottle = FMath::Clamp(currentThrottle + throttle, -1.f, 1.f);
 }
 
 void UTankTrack::BeginPlay()
@@ -21,6 +19,13 @@ void UTankTrack::BeginPlay()
 	Super::BeginPlay();
 
 	tankRootMesh = Cast<UStaticMeshComponent>(GetOwner()->GetRootComponent());
+}
+
+void UTankTrack::DriveTrack()
+{
+	auto forceApplied = GetForwardVector() * currentThrottle * maxDrivingForce;
+	auto tankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
+	tankRoot->AddForceAtLocation(forceApplied, GetComponentLocation());
 }
 
 void UTankTrack::ApplySidewaysForce()
@@ -38,5 +43,7 @@ void UTankTrack::ApplySidewaysForce()
 void UTankTrack::OnHit(UPrimitiveComponent* hitComponent, AActor* otherActor,
 	UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit)
 {
+	DriveTrack();
 	ApplySidewaysForce();
+	currentThrottle = 0.f;
 }
