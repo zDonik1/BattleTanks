@@ -62,11 +62,8 @@ private:
 	void TickComponent(float deltaTime, ELevelTick tickType, 
 		FActorComponentTickFunction* tickFunction) override;
 
-	// Moves barrel towards launch direction
-	void MoveBarrel();
-
-	// Moves turret towards launch direction
-	void MoveTurret();
+	// Moves barrel and turret towards launch direction
+	void MoveBarrelAndTurret();
 
 	bool IsBarrelMoving();
 };

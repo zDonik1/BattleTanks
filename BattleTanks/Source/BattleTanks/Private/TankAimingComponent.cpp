@@ -33,8 +33,7 @@ void UTankAimingComponent::AimAt(const FVector& hitLocation)
 		return;
 	
 	launchDirection = launchDirection.GetSafeNormal();
-	MoveBarrel();
-	MoveTurret();
+	MoveBarrelAndTurret();
 }
 
 void UTankAimingComponent::Fire()
@@ -75,24 +74,22 @@ void UTankAimingComponent::TickComponent(float deltaTime, ELevelTick tickType,
 		fireState = EFireState::Locked;
 }
 
-void UTankAimingComponent::MoveBarrel()
+void UTankAimingComponent::MoveBarrelAndTurret()
 {
 	if (!ensure(m_barrel && m_turret))
 		return; 
 
-	auto barrelPitch = m_barrel->GetForwardVector().Rotation().Pitch;
-	auto deltaPitch = launchDirection.Rotation().Pitch - barrelPitch;
-	m_barrel->Elevate(deltaPitch);
-}
+	auto barrelRotator = m_barrel->GetForwardVector().Rotation();
+	auto deltaRotator = launchDirection.Rotation() - barrelRotator;
+	if (FMath::Abs(deltaRotator.Yaw) > 180.f) {
+		if (deltaRotator.Yaw > 0)
+			deltaRotator.Yaw -= 360.f;
+		else
+			deltaRotator.Yaw += 360.f;
+	}
 
-void UTankAimingComponent::MoveTurret()
-{
-	if (!ensure(m_barrel && m_turret))
-		return;
-
-	auto turretYaw = m_turret->GetForwardVector().Rotation().Yaw;
-	auto deltaYaw = launchDirection.Rotation().Yaw - turretYaw;
-	m_turret->Rotate(deltaYaw);
+	m_barrel->Elevate(deltaRotator.Pitch);
+	m_turret->Rotate(deltaRotator.Yaw);
 }
 
 bool UTankAimingComponent::IsBarrelMoving()
