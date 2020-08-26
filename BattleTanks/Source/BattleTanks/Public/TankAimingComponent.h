@@ -47,6 +47,8 @@ public:
 	// Sets default values for this component's properties
 	UTankAimingComponent();
 
+	EFireState GetFireState() const;
+
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void Initialize(UTankBarrel *barrel, UTankTurret *turret);
 

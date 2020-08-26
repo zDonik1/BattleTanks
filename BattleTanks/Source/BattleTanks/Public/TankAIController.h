@@ -20,7 +20,7 @@ private:
 
 	// How close AI tank should be to player before stopping in cm
 	UPROPERTY(EditDefaultsOnly)
-		float acceptanceRadius = 3000.f;
+		float acceptanceRadius = 8000.f;
 	
 private:
 	virtual void BeginPlay() override;

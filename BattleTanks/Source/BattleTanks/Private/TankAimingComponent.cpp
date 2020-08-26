@@ -14,6 +14,11 @@ UTankAimingComponent::UTankAimingComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
+EFireState UTankAimingComponent::GetFireState() const
+{
+	return fireState;
+}
+
 void UTankAimingComponent::Initialize(UTankBarrel* barrel, UTankTurret* turret)
 {
 	m_barrel = barrel;
