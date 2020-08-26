@@ -15,7 +15,7 @@ class BATTLETANKS_API UTankTrack : public UStaticMeshComponent
 	GENERATED_BODY()
 
 private:
-	UStaticMeshComponent *tankRootMesh = nullptr;
+	UStaticMeshComponent* tankRootMesh = nullptr;
 	// Max driving force in kg*cm*s^-2
 	UPROPERTY(EditDefaultsOnly)
 		float maxDrivingForce = 40000000.f;
@@ -29,6 +29,10 @@ public:
 
 private:
 	void BeginPlay() override;
-	void TickComponent(float deltaTime, ELevelTick tickType,
-		FActorComponentTickFunction* tickFunction) override;
+	
+	void ApplySidewaysForce();
+
+	UFUNCTION()
+		void OnHit(UPrimitiveComponent* hitComponent, AActor* otherActor,
+			UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit);
 };
