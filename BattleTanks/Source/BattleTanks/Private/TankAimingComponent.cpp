@@ -46,7 +46,7 @@ void UTankAimingComponent::Fire()
 	if (!ensure(m_barrel && projectile))
 		return;
 
-	if (fireState == EFireState::Reloading)
+	if (fireState == EFireState::Reloading || fireState == EFireState::NoAmmo)
 		return;
 
 	auto projectileInstance = GetWorld()->SpawnActor<AProjectile>(
@@ -54,6 +54,10 @@ void UTankAimingComponent::Fire()
 		m_barrel->GetSocketLocation(FName("ProjectileLaunch")),
 		m_barrel->GetSocketRotation(FName("ProjectileLaunch"))
 		);
+
+	--ammoLeft;
+	if (ammoLeft <= 0)
+		fireState = EFireState::NoAmmo;
 
 	projectileInstance->Launch(launchSpeed);
 	lastFireTime = FPlatformTime::Seconds();
@@ -70,6 +74,9 @@ void UTankAimingComponent::TickComponent(float deltaTime, ELevelTick tickType,
 	FActorComponentTickFunction* tickFunction)
 {
 	Super::TickComponent(deltaTime, tickType, tickFunction);
+
+	if (fireState == EFireState::NoAmmo)
+		return;
 
 	if ((FPlatformTime::Seconds() - lastFireTime) < reloadTimeInSeconds)
 		fireState = EFireState::Reloading;

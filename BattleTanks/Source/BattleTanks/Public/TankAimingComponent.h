@@ -15,6 +15,7 @@ enum class EFireState : uint8
 	Locked,
 	Aiming,
 	Reloading,
+	NoAmmo,
 };
 
 // Holds barrel's properties and Elevate method
@@ -42,6 +43,9 @@ private:
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
 		EFireState fireState = EFireState::Reloading;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "State")
+		int ammoLeft = 3;
 
 public:
 	// Sets default values for this component's properties
