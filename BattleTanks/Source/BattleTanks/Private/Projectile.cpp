@@ -5,12 +5,13 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "PhysicsEngine/RadialForceComponent.h"
 
 // Sets default values
 AProjectile::AProjectile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	projectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(FName("MovementComponent"));
 	projectileMovement->bAutoActivate = false;
@@ -21,7 +22,16 @@ AProjectile::AProjectile()
 	collisionMesh->SetVisibility(false);
 
 	launchBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName("LaunchBlast"));
-	launchBlast->AttachTo(RootComponent);
+	launchBlast->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+
+	impactBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName("ImpactBlast"));
+	impactBlast->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	impactBlast->bAutoActivate = false;
+
+	explosionForce = CreateDefaultSubobject<URadialForceComponent>(FName("ExplosionForce"));
+	explosionForce->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+
+
 }
 
 void AProjectile::Launch(float speed)
@@ -35,12 +45,13 @@ void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	collisionMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 }
 
-// Called every frame
-void AProjectile::Tick(float DeltaTime)
+void AProjectile::OnHit(UPrimitiveComponent* hitComponent, AActor* otherActor,
+	UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit)
 {
-	Super::Tick(DeltaTime);
-
+	launchBlast->Deactivate();
+	impactBlast->Activate();
+	explosionForce->FireImpulse();
 }
-

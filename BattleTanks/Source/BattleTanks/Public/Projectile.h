@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
 
+class UParticleSystemComponent;
+
 UCLASS()
 class BATTLETANKS_API AProjectile : public AActor
 {
@@ -18,7 +20,13 @@ private:
 		class UStaticMeshComponent* collisionMesh = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
-		class UParticleSystemComponent* launchBlast = nullptr;
+		UParticleSystemComponent* launchBlast = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+		UParticleSystemComponent* impactBlast = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+		class URadialForceComponent* explosionForce = nullptr;
 
 public:
 	// Sets default values for this actor's properties
@@ -31,8 +39,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+private:
+	UFUNCTION()
+		void OnHit(UPrimitiveComponent* hitComponent, AActor* otherActor,
+			UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit);
 };
