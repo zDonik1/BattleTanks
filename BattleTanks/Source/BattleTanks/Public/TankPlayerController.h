@@ -18,6 +18,7 @@ class BATTLETANKS_API ATankPlayerController : public APlayerController
 
 private:
 	class ATank* controlledTank = nullptr;
+	class UTankAimingComponent* aimingComponent = nullptr;
 
 	UPROPERTY(EditDefaultsOnly)
 		float crossHairXLocation = 0.5f;

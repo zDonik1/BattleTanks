@@ -12,7 +12,7 @@ void ATankPlayerController::BeginPlay()
 	controlledTank = Cast<ATank>(GetPawn());
 	// finding component instead of getting from tank, since there is a race condition
 	// ... between when BeginPlay is called on PlayerController and Tank
-	auto aimingComponent = controlledTank->FindComponentByClass<UTankAimingComponent>();
+	aimingComponent = controlledTank->FindComponentByClass<UTankAimingComponent>();
 	if (!ensure(aimingComponent))
 		return;
 	
@@ -33,7 +33,7 @@ void ATankPlayerController::AimTowardsCrosshair()
 
 	FVector hitLocation;
 	if (GetSightRayHitLocation(hitLocation))
-		controlledTank->GetAimComponent()->AimAt(hitLocation);
+		aimingComponent->AimAt(hitLocation);
 }
 
 bool ATankPlayerController::GetSightRayHitLocation(FVector& o_hitLocation) const

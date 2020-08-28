@@ -12,17 +12,17 @@ ATank::ATank()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-UTankAimingComponent* ATank::GetAimComponent()
+float ATank::TakeDamage(float damageAmount, const FDamageEvent& damageEvent, AController* eventInstigator, AActor* damageCauser)
 {
-	return tankAimingComponent;
+	auto damageToApply = FMath::Clamp(FPlatformMath::RoundToInt(damageAmount), 0, currentHealth);
+	currentHealth -= damageToApply;
+	return damageToApply;
 }
 
 // Called when the game starts or when spawned
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
-
-	tankAimingComponent = FindComponentByClass<UTankAimingComponent>();
 }
 
 // Called to bind functionality to input

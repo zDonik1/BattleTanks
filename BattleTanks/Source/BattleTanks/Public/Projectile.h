@@ -28,6 +28,12 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 		class URadialForceComponent* explosionForce = nullptr;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+		float destroyDelay = 2.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+		float projectileDamage = 20.f;
+
 public:
 	// Sets default values for this actor's properties
 	AProjectile();
@@ -43,4 +49,6 @@ private:
 	UFUNCTION()
 		void OnHit(UPrimitiveComponent* hitComponent, AActor* otherActor,
 			UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit);
+
+	void OnTimerExpire();
 };

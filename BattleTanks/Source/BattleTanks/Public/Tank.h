@@ -15,13 +15,18 @@ class BATTLETANKS_API ATank : public APawn
 	GENERATED_BODY()
 
 private:
-	UTankAimingComponent* tankAimingComponent = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+		int32 startingHealth = 100;
+
+	UPROPERTY(VisibleAnywhere, Category = "Health")
+		int32 currentHealth = startingHealth;
 
 public:
 	// Sets default values for this pawn's properties
 	ATank();
 
-	UTankAimingComponent* GetAimComponent();
+	virtual float TakeDamage(float damageAmount, const FDamageEvent &damageEvent,
+		AController* eventInstigator, AActor* damageCauser) override;
 
 protected:
 	// Called when the game starts or when spawned
