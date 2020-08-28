@@ -25,6 +25,9 @@ public:
 	// Sets default values for this pawn's properties
 	ATank();
 
+	UFUNCTION(BlueprintPure, Category = "Health")
+		float GetHealthPercent() const;
+
 	virtual float TakeDamage(float damageAmount, const FDamageEvent &damageEvent,
 		AController* eventInstigator, AActor* damageCauser) override;
 

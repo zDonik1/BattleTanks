@@ -12,6 +12,11 @@ ATank::ATank()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
+float ATank::GetHealthPercent() const
+{
+	return static_cast<float>(currentHealth) / static_cast<float>(startingHealth);
+}
+
 float ATank::TakeDamage(float damageAmount, const FDamageEvent& damageEvent, AController* eventInstigator, AActor* damageCauser)
 {
 	auto damageToApply = FMath::Clamp(FPlatformMath::RoundToInt(damageAmount), 0, currentHealth);
