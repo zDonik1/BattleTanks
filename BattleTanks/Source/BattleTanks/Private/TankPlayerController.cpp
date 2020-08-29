@@ -8,15 +8,8 @@
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	controlledTank = Cast<ATank>(GetPawn());
-	// finding component instead of getting from tank, since there is a race condition
-	// ... between when BeginPlay is called on PlayerController and Tank
-	aimingComponent = controlledTank->FindComponentByClass<UTankAimingComponent>();
-	if (!ensure(aimingComponent))
-		return;
-	
-	FoundAimingComponent(aimingComponent);
+
+
 }
 
 void ATankPlayerController::Tick(float deltaSeconds)
@@ -24,6 +17,29 @@ void ATankPlayerController::Tick(float deltaSeconds)
 	Super::Tick(deltaSeconds);
 
 	AimTowardsCrosshair();
+}
+
+void ATankPlayerController::SetPawn(APawn* pawn)
+{
+	Super::SetPawn(pawn);
+
+	if (!pawn)
+		return;
+
+	controlledTank = Cast<ATank>(pawn);
+	if (!ensure(controlledTank))
+		return;
+
+	aimingComponent = controlledTank->FindComponentByClass<UTankAimingComponent>();
+	if (ensure(aimingComponent))
+		FoundAimingComponent(aimingComponent);
+
+	controlledTank->OnDeath.AddUniqueDynamic(this, &ATankPlayerController::OnTankDeath);
+}
+
+void ATankPlayerController::OnTankDeath()
+{
+	StartSpectatingOnly();
 }
 
 void ATankPlayerController::AimTowardsCrosshair()

@@ -36,6 +36,10 @@ protected:
 private:
 	virtual void BeginPlay() override;
 	virtual void Tick(float deltaSeconds) override;
+	virtual void SetPawn(APawn* pawn) override;
+
+	UFUNCTION()
+		void OnTankDeath();
 	
 	// Moving the barrel to aim to crosshair position
 	void AimTowardsCrosshair();

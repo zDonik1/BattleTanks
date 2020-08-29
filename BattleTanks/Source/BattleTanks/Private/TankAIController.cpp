@@ -10,9 +10,6 @@ void ATankAIController::BeginPlay()
 	Super::BeginPlay();
 
 	playerTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	// finding component instead of getting from tank, since there is a race condition
-	// ... between when BeginPlay is called on PlayerController and Tank
-	aimComponent = Cast<ATank>(GetPawn())->FindComponentByClass<UTankAimingComponent>();
 }
 
 void ATankAIController::Tick(float deltaTime)
@@ -31,4 +28,24 @@ void ATankAIController::Tick(float deltaTime)
 
 	if (aimComponent->GetFireState() == EFireState::Locked)
 		aimComponent->Fire();
+}
+
+void ATankAIController::SetPawn(APawn* pawn)
+{
+	Super::SetPawn(pawn);
+
+	if (!pawn)
+		return;
+
+	controlledTank = Cast<ATank>(pawn);
+	if (!ensure(controlledTank))
+		return;
+
+	aimComponent = controlledTank->FindComponentByClass<UTankAimingComponent>();
+	controlledTank->OnDeath.AddUniqueDynamic(this, &ATankAIController::OnTankDeath);
+}
+
+void ATankAIController::OnTankDeath()
+{
+	controlledTank->DetachFromControllerPendingDestroy();
 }

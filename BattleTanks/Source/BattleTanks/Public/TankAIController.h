@@ -6,6 +6,8 @@
 #include "AIController.h"
 #include "TankAIController.generated.h"
 
+class ATank;
+
 /**
  * 
  */
@@ -15,7 +17,8 @@ class BATTLETANKS_API ATankAIController : public AAIController
 	GENERATED_BODY()
 
 private:
-	class ATank* playerTank = nullptr;
+	ATank* controlledTank = nullptr;
+	ATank* playerTank = nullptr;
 	class UTankAimingComponent* aimComponent = nullptr;
 
 	// How close AI tank should be to player before stopping in cm
@@ -25,4 +28,8 @@ private:
 private:
 	virtual void BeginPlay() override;
 	virtual void Tick(float deltaTime) override;
+	virtual void SetPawn(APawn* pawn) override;
+
+	UFUNCTION()
+		void OnTankDeath();
 };

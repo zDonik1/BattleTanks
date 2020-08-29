@@ -21,6 +21,9 @@ float ATank::TakeDamage(float damageAmount, const FDamageEvent& damageEvent, ACo
 {
 	auto damageToApply = FMath::Clamp(FPlatformMath::RoundToInt(damageAmount), 0, currentHealth);
 	currentHealth -= damageToApply;
+	if (currentHealth <= 0)
+		OnDeath.Broadcast();
+
 	return damageToApply;
 }
 
@@ -28,6 +31,8 @@ float ATank::TakeDamage(float damageAmount, const FDamageEvent& damageEvent, ACo
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
+
+	currentHealth = startingHealth; // incase updated in blueprint
 }
 
 // Called to bind functionality to input

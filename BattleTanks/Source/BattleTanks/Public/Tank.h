@@ -9,6 +9,8 @@
 class UTankAimingComponent;
 class UTankBarrel;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDeathDelegate);
+
 UCLASS()
 class BATTLETANKS_API ATank : public APawn
 {
@@ -22,13 +24,16 @@ private:
 		int32 currentHealth = startingHealth;
 
 public:
+	FDeathDelegate OnDeath;
+
+public:
 	// Sets default values for this pawn's properties
 	ATank();
 
 	UFUNCTION(BlueprintPure, Category = "Health")
 		float GetHealthPercent() const;
 
-	virtual float TakeDamage(float damageAmount, const FDamageEvent &damageEvent,
+	virtual float TakeDamage(float damageAmount, const FDamageEvent& damageEvent,
 		AController* eventInstigator, AActor* damageCauser) override;
 
 protected:
