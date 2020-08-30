@@ -34,14 +34,15 @@ void ATankAIController::SetPawn(APawn* pawn)
 {
 	Super::SetPawn(pawn);
 
-	if (!pawn)
+	if (!ensure(pawn))
 		return;
+
+	aimComponent = pawn->FindComponentByClass<UTankAimingComponent>();
 
 	controlledTank = Cast<ATank>(pawn);
-	if (!ensure(controlledTank))
+	if (controlledTank) // no ensure since we are checking for mortars
 		return;
 
-	aimComponent = controlledTank->FindComponentByClass<UTankAimingComponent>();
 	controlledTank->OnDeath.AddUniqueDynamic(this, &ATankAIController::OnTankDeath);
 }
 
