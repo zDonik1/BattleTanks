@@ -34,7 +34,7 @@ void ATankAIController::SetPawn(APawn* pawn)
 {
 	Super::SetPawn(pawn);
 
-	if (!ensure(pawn))
+	if (!pawn)
 		return;
 
 	aimComponent = pawn->FindComponentByClass<UTankAimingComponent>();
