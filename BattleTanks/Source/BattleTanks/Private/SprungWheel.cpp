@@ -15,9 +15,6 @@ ASprungWheel::ASprungWheel()
 
 	wheel = CreateDefaultSubobject<UStaticMeshComponent>(FName("Wheel"));
 	wheel->SetupAttachment(RootComponent);
-
-	mass = CreateDefaultSubobject<UStaticMeshComponent>(FName("Mass"));
-	mass->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -25,12 +22,20 @@ void ASprungWheel::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if (GetAttachParentActor()) {
-		UE_LOG(LogTemp, Warning, TEXT("parent not null"));
-	}
-	else {
-		UE_LOG(LogTemp, Warning, TEXT("parent is null"));
-	}
+	SetupConstraint();
+}
+
+void ASprungWheel::SetupConstraint()
+{
+	auto parentActor = GetAttachParentActor();
+	if (!ensure(GetAttachParentActor()))
+		return;
+
+	auto parentRootComp = Cast<UPrimitiveComponent>(parentActor->GetRootComponent());
+	if (!ensure(parentRootComp))
+		return;
+
+	constraint->SetConstrainedComponents(parentRootComp, NAME_None, wheel, NAME_None);
 }
 
 // Called every frame

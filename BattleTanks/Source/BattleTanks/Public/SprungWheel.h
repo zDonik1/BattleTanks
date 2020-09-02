@@ -13,24 +13,19 @@ class BATTLETANKS_API ASprungWheel : public AActor
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
-		class UStaticMeshComponent* mass = nullptr;
-
-	UPROPERTY(VisibleAnywhere, Category = "Components")
 		class UStaticMeshComponent* wheel = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 		class UPhysicsConstraintComponent* constraint = nullptr;
 	
 public:	
-	// Sets default values for this actor's properties
 	ASprungWheel();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+protected:
+	virtual void BeginPlay() override;
+
+private:	
+	void SetupConstraint();
 };
