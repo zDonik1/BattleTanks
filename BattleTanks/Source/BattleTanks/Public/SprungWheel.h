@@ -6,6 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "SprungWheel.generated.h"
 
+class USphereComponent;
+class UPhysicsConstraintComponent;
+
 UCLASS()
 class BATTLETANKS_API ASprungWheel : public AActor
 {
@@ -13,15 +16,23 @@ class BATTLETANKS_API ASprungWheel : public AActor
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
-		class UStaticMeshComponent* wheel = nullptr;
+		USphereComponent* axle = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
-		class UPhysicsConstraintComponent* constraint = nullptr;
-	
+		USphereComponent* wheel = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+		UPhysicsConstraintComponent* componentAxleConstraint = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+		UPhysicsConstraintComponent* axleWheelConstraint = nullptr;
+
 public:	
 	ASprungWheel();
 
 	virtual void Tick(float DeltaTime) override;
+
+	void AddDrivingForce(float forceMagnitude);
 
 protected:
 	virtual void BeginPlay() override;
