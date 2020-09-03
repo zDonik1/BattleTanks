@@ -16,7 +16,6 @@ class BATTLETANKS_API UTankTrack : public UStaticMeshComponent
 
 private:
 	UStaticMeshComponent* tankRootMesh = nullptr;
-	float currentThrottle = 0.f;
 
 	// Max driving force in kg*cm*s^-2
 	UPROPERTY(EditDefaultsOnly)
@@ -33,10 +32,7 @@ public:
 private:
 	void BeginPlay() override;
 	
-	void DriveTrack();
-	void ApplySidewaysForce();
+	void DriveTrack(float throttle);
 
-	UFUNCTION()
-		void OnHit(UPrimitiveComponent* hitComponent, AActor* otherActor,
-			UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit);
+	TArray<class ASprungWheel*> GetWheels() const;
 };

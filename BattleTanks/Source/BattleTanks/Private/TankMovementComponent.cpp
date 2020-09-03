@@ -26,8 +26,8 @@ void UTankMovementComponent::IntendMoveRight(float axis)
 	if (!ensure(m_leftTrack && m_rightTrack))
 		return;
 
-	m_leftTrack->SetThrottle(axis);
-	m_rightTrack->SetThrottle(-axis);
+	m_leftTrack->SetThrottle(-axis);
+	m_rightTrack->SetThrottle(axis);
 }
 
 void UTankMovementComponent::RequestDirectMove(const FVector& moveVelocity, bool bForceMaxSpeed)

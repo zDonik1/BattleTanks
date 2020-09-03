@@ -15,6 +15,8 @@ class BATTLETANKS_API ASprungWheel : public AActor
 	GENERATED_BODY()
 
 private:
+	float totalForceMagnitude = 0.f;
+
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 		USphereComponent* axle = nullptr;
 
@@ -27,7 +29,7 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 		UPhysicsConstraintComponent* axleWheelConstraint = nullptr;
 
-public:	
+public:
 	ASprungWheel();
 
 	virtual void Tick(float DeltaTime) override;
@@ -37,6 +39,11 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-private:	
+private:
 	void SetupConstraint();
+	void ApplyForce();
+
+	UFUNCTION()
+		void OnHit(UPrimitiveComponent* hitComponent, AActor* otherActor,
+			UPrimitiveComponent* otherComp, FVector normalImpulse, const FHitResult& hit);
 };

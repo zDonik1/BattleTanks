@@ -2,16 +2,17 @@
 
 
 #include "TankTrack.h"
+#include "SprungWheel.h"
+#include "SpawnPoint.h"
 
 UTankTrack::UTankTrack()
 {
 	PrimaryComponentTick.bCanEverTick = false;
-	OnComponentHit.AddDynamic(this, &UTankTrack::OnHit);
 }
 
 void UTankTrack::SetThrottle(float throttle)
 {
-	currentThrottle = FMath::Clamp(currentThrottle + throttle, -1.f, 1.f);
+	DriveTrack(FMath::Clamp(throttle, -1.f, 1.f));
 }
 
 void UTankTrack::BeginPlay()
@@ -21,29 +22,31 @@ void UTankTrack::BeginPlay()
 	tankRootMesh = Cast<UStaticMeshComponent>(GetOwner()->GetRootComponent());
 }
 
-void UTankTrack::DriveTrack()
+void UTankTrack::DriveTrack(float throttle)
 {
-	auto forceApplied = GetForwardVector() * currentThrottle * maxDrivingForce;
-	auto tankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
-	tankRoot->AddForceAtLocation(forceApplied, GetComponentLocation());
+	auto forceApplied = throttle * maxDrivingForce;
+	auto wheels = GetWheels();
+	auto forcePerWheel = forceApplied / wheels.Num();
+	for (ASprungWheel* wheel : wheels) {
+		wheel->AddDrivingForce(forcePerWheel);
+	}
 }
 
-void UTankTrack::ApplySidewaysForce()
+TArray<class ASprungWheel*> UTankTrack::GetWheels() const
 {
-	if (!ensure(tankRootMesh))
-		return;
+	TArray<ASprungWheel*> resultArray;
+	TArray<USceneComponent*> children;
+	GetChildrenComponents(true, children);
+	for (auto* child : children) {
+		auto spawnPointChild = Cast<USpawnPoint>(child);
+		if (!spawnPointChild)
+			continue;
 
-	auto rightVector = GetRightVector();
-	auto horizontalSlipSpeed = FVector::DotProduct(GetComponentVelocity(), rightVector);
-	auto correctionAcceleration = horizontalSlipSpeed / GetWorld()->GetDeltaSeconds() * -rightVector;
-	auto correctionForce = correctionAcceleration * tankRootMesh->GetMass() / 2; // 2 tracks
-	tankRootMesh->AddForce(correctionForce);
-}
+		auto sprungWheel = Cast<ASprungWheel>(spawnPointChild->GetSpawnedActor());
+		if (!sprungWheel)
+			continue;
 
-void UTankTrack::OnHit(UPrimitiveComponent* hitComponent, AActor* otherActor,
-	UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit)
-{
-	DriveTrack();
-	ApplySidewaysForce();
-	currentThrottle = 0.f;
+		resultArray.Add(sprungWheel);
+	}
+	return resultArray;
 }
